@@ -53,7 +53,7 @@ mcp:
       - .
       command: node
 
- 
+
     code-implementation:
       args:
       - tools/code_implementation_server.py

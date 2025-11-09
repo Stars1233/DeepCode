@@ -102,7 +102,7 @@ class CLIWorkflowAdapter:
     def create_cli_progress_callback(self, enable_indexing: bool = True) -> Callable:
         """
         Create CLI-optimized progress callback function with mode-aware stage mapping.
-        
+
         This matches the UI version's detailed progress mapping logic.
 
         Args:
@@ -149,7 +149,7 @@ class CLIWorkflowAdapter:
                         stage = 4  # Implement (skip References, Repos, Index)
                     else:
                         stage = 4  # Complete
-                
+
                 self.cli_interface.display_processing_stages(stage, enable_indexing)
 
                 # Display status message
@@ -162,7 +162,7 @@ class CLIWorkflowAdapter:
     ) -> Dict[str, Any]:
         """
         Execute the complete intelligent multi-agent research orchestration pipeline.
-        
+
         Updated to match UI version: default enable_indexing=False for faster processing.
 
         Args:
@@ -188,7 +188,8 @@ class CLIWorkflowAdapter:
                 else:
                     mode_msg = "⚡ fast (indexing disabled)"
                 self.cli_interface.print_status(
-                    f"🚀 Starting {mode_msg} agent orchestration pipeline...", "processing"
+                    f"🚀 Starting {mode_msg} agent orchestration pipeline...",
+                    "processing",
                 )
                 self.cli_interface.display_processing_stages(0, enable_indexing)
 
@@ -203,7 +204,9 @@ class CLIWorkflowAdapter:
             # Display completion
             if self.cli_interface:
                 final_stage = 8 if enable_indexing else 4
-                self.cli_interface.display_processing_stages(final_stage, enable_indexing)
+                self.cli_interface.display_processing_stages(
+                    final_stage, enable_indexing
+                )
                 self.cli_interface.print_status(
                     "🎉 Agent orchestration pipeline completed successfully!",
                     "complete",
@@ -226,10 +229,12 @@ class CLIWorkflowAdapter:
                 "pipeline_mode": "comprehensive" if enable_indexing else "optimized",
             }
 
-    async def execute_chat_pipeline(self, user_input: str, enable_indexing: bool = False) -> Dict[str, Any]:
+    async def execute_chat_pipeline(
+        self, user_input: str, enable_indexing: bool = False
+    ) -> Dict[str, Any]:
         """
         Execute the chat-based planning and implementation pipeline.
-        
+
         Updated to match UI version: accepts enable_indexing parameter.
 
         Args:
@@ -259,7 +264,7 @@ class CLIWorkflowAdapter:
                         stage = 3  # Save Plan
                     else:
                         stage = 4  # Implement
-                    
+
                     self.cli_interface.display_processing_stages(stage, chat_mode=True)
 
                     # Display status message
@@ -267,9 +272,12 @@ class CLIWorkflowAdapter:
 
             # Display pipeline start
             if self.cli_interface:
-                indexing_note = " (with indexing)" if enable_indexing else " (fast mode)"
+                indexing_note = (
+                    " (with indexing)" if enable_indexing else " (fast mode)"
+                )
                 self.cli_interface.print_status(
-                    f"🚀 Starting chat-based planning pipeline{indexing_note}...", "processing"
+                    f"🚀 Starting chat-based planning pipeline{indexing_note}...",
+                    "processing",
                 )
                 self.cli_interface.display_processing_stages(0, chat_mode=True)
 
@@ -303,7 +311,7 @@ class CLIWorkflowAdapter:
     ) -> Dict[str, Any]:
         """
         Process input using the intelligent agent orchestration engine.
-        
+
         This is the main CLI interface to the latest agent orchestration capabilities.
         Updated to match UI version: default enable_indexing=False.
 

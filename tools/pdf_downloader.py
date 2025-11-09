@@ -188,7 +188,7 @@ def format_file_operation_result(
     """
     if result["success"]:
         size_mb = result["size"] / (1024 * 1024)
-        
+
         # 处理不同操作类型的动词形式
         if operation == "copy":
             operation_verb = "copied"
@@ -196,7 +196,7 @@ def format_file_operation_result(
             operation_verb = "downloaded"
         else:  # move
             operation_verb = "moved"
-            
+
         msg = f"[SUCCESS] Successfully {operation_verb}: {source}\n"
 
         if operation == "download":
@@ -1180,7 +1180,7 @@ async def move_file_to(
 ) -> str:
     """
     Copy a local file to a new location (preserves original file).
-    
+
     Note: Despite the name "move_file_to", this tool COPIES the file to preserve the original.
     This prevents data loss during file processing workflows.
 

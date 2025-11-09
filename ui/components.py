@@ -368,7 +368,6 @@ def file_input_component(task_counter: int) -> Optional[str]:
         # Save uploaded file using cross-platform file handler
         try:
             import sys
-            import os
             from pathlib import Path
 
             # Add project root to path for imports
@@ -389,7 +388,7 @@ def file_input_component(task_counter: int) -> Optional[str]:
             original_file_path = file_handler.create_safe_temp_file(
                 suffix=f".{file_ext}",
                 prefix=f"upload_{uploaded_file.name.split('.')[0]}_",
-                content=uploaded_file.getvalue()
+                content=uploaded_file.getvalue(),
             )
 
             st.success("✅ File uploaded successfully!")
@@ -397,7 +396,9 @@ def file_input_component(task_counter: int) -> Optional[str]:
             # Check if file is already PDF
             if file_ext == "pdf":
                 st.info("📑 File is already in PDF format, no conversion needed.")
-                return str(original_file_path)  # Convert Path to string for compatibility
+                return str(
+                    original_file_path
+                )  # Convert Path to string for compatibility
 
             # Convert to PDF
             with st.spinner(f"🔄 Converting {file_ext.upper()} to PDF..."):

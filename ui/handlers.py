@@ -583,11 +583,13 @@ def cleanup_temp_file(input_source: str, input_type: str):
     if input_type == "file" and input_source:
         try:
             from utils.cross_platform_file_handler import get_file_handler
+
             file_handler = get_file_handler()
             file_handler.safe_remove_file(input_source)
         except Exception as e:
             # Log but don't fail - cleanup is best effort
             import logging
+
             logging.getLogger(__name__).warning(
                 f"Failed to cleanup temp file {input_source}: {e}"
             )
