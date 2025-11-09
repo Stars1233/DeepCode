@@ -256,7 +256,6 @@ def sidebar_control_panel() -> Dict[str, Any]:
         # Indexing functionality toggle
         enable_indexing = st.checkbox(
             "🗂️ Enable Codebase Indexing",
-            value=True,
             help="Enable GitHub repository download and codebase indexing. Disabling this will skip Phase 6 (GitHub Download) and Phase 7 (Codebase Indexing) for faster processing.",
             key="enable_indexing",
         )
@@ -366,9 +365,8 @@ def file_input_component(task_counter: int) -> Optional[str]:
         file_size = len(uploaded_file.getvalue())
         st.info(f"📄 **File:** {uploaded_file.name} ({format_file_size(file_size)})")
 
-        # Save uploaded file to temporary directory
+        # Save uploaded file using cross-platform file handler
         try:
-            import tempfile
             import sys
             import os
             from pathlib import Path
@@ -379,23 +377,27 @@ def file_input_component(task_counter: int) -> Optional[str]:
             if str(project_root) not in sys.path:
                 sys.path.insert(0, str(project_root))
 
-            # Import PDF converter
+            # Import required modules
             from tools.pdf_converter import PDFConverter
+            from utils.cross_platform_file_handler import get_file_handler
 
-            # Save original file
+            # Get cross-platform file handler
+            file_handler = get_file_handler()
+
+            # Save original file using safe method
             file_ext = uploaded_file.name.split(".")[-1].lower()
-            with tempfile.NamedTemporaryFile(
-                delete=False, suffix=f".{file_ext}"
-            ) as tmp_file:
-                tmp_file.write(uploaded_file.getvalue())
-                original_file_path = tmp_file.name
+            original_file_path = file_handler.create_safe_temp_file(
+                suffix=f".{file_ext}",
+                prefix=f"upload_{uploaded_file.name.split('.')[0]}_",
+                content=uploaded_file.getvalue()
+            )
 
             st.success("✅ File uploaded successfully!")
 
             # Check if file is already PDF
             if file_ext == "pdf":
                 st.info("📑 File is already in PDF format, no conversion needed.")
-                return original_file_path
+                return str(original_file_path)  # Convert Path to string for compatibility
 
             # Convert to PDF
             with st.spinner(f"🔄 Converting {file_ext.upper()} to PDF..."):
@@ -428,21 +430,15 @@ def file_input_component(task_counter: int) -> Optional[str]:
                         if "ReportLab" in missing_deps:
                             st.code("pip install reportlab")
 
-                        # Clean up original file
-                        try:
-                            os.unlink(original_file_path)
-                        except Exception:
-                            pass
+                        # Clean up original file using safe method
+                        file_handler.safe_remove_file(original_file_path)
                         return None
 
                     # Perform conversion
-                    pdf_path = converter.convert_to_pdf(original_file_path)
+                    pdf_path = converter.convert_to_pdf(str(original_file_path))
 
-                    # Clean up original file
-                    try:
-                        os.unlink(original_file_path)
-                    except Exception:
-                        pass
+                    # Clean up original file using safe method
+                    file_handler.safe_remove_file(original_file_path)
 
                     # Display conversion result
                     pdf_size = Path(pdf_path).stat().st_size
@@ -460,11 +456,8 @@ def file_input_component(task_counter: int) -> Optional[str]:
                     st.markdown("- Using a different file format")
                     st.markdown("- Checking if the file is corrupted")
 
-                    # Clean up original file
-                    try:
-                        os.unlink(original_file_path)
-                    except Exception:
-                        pass
+                    # Clean up original file using safe method
+                    file_handler.safe_remove_file(original_file_path)
                     return None
 
         except Exception as e:

@@ -3,7 +3,7 @@ anthropic: null
 default_search_server: brave
 document_segmentation:
   enabled: true
-  size_threshold_chars: 3000
+  size_threshold_chars: 50000
 execution_engine: asyncio
 logger:
   level: info
@@ -25,12 +25,35 @@ mcp:
         BOCHA_API_KEY: ''
         PYTHONPATH: .
     brave:
+      # macos and linux should use this
+      # args:
+      # - -y
+      # - '@modelcontextprotocol/server-brave-search'
+      # command: npx
+
+      # windows should use this
       args:
-      - -y
-      - '@modelcontextprotocol/server-brave-search'
-      command: npx
+      # please use the correct path for your system
+      - C:/Users/LEGION/AppData/Roaming/npm/node_modules/@modelcontextprotocol/server-brave-search/dist/index.js
+      command: node
       env:
         BRAVE_API_KEY: ''
+    filesystem:
+      # macos and linux should use this
+      # args:
+      # - -y
+      # - '@modelcontextprotocol/server-filesystem'
+      # - .
+      # command: npx
+
+      # windows should use this
+      args:
+      # please use the correct path for your system
+      - C:/Users/LEGION/AppData/Roaming/npm/node_modules/@modelcontextprotocol/server-filesystem/dist/index.js
+      - .
+      command: node
+
+ 
     code-implementation:
       args:
       - tools/code_implementation_server.py
@@ -71,12 +94,6 @@ mcp:
       command: python
       env:
         PYTHONPATH: .
-    filesystem:
-      args:
-      - -y
-      - '@modelcontextprotocol/server-filesystem'
-      - .
-      command: npx
     github-downloader:
       args:
       - tools/git_command.py

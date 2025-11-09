@@ -72,9 +72,10 @@ Processing Rules:
    - Return saved file path and metadata
 
 2. File Input (input_type = "file"):
-   - Move file to "./deepcode_lab/papers/id/" using move_file_to tool
+   - Copy file to "./deepcode_lab/papers/id/" using move_file_to tool (preserves original)
    - The move_file_to tool will automatically convert PDF/documents to .md format
    - NEVER manually extract content or use write_file - let the conversion tools handle this
+   - Note: Original file is preserved, only a copy is placed in target directory
    - Return new saved file path and metadata
 
 3. Directory Input (input_type = "directory"):

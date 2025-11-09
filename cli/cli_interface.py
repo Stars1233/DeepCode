@@ -39,7 +39,7 @@ class CLIInterface:
         self.uploaded_file = None
         self.is_running = True
         self.processing_history = []
-        self.enable_indexing = True  # Default configuration
+        self.enable_indexing = False  # Default configuration (matching UI: fast mode by default)
 
         # Load segmentation config from the same source as UI
         self._load_segmentation_config()
